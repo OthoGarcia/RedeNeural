@@ -24,6 +24,11 @@ public class Perceptron {
         this.e = e;
         this.max_int = max_int;
     }
+
+    public Perceptron(double a) {
+        this.a = a;
+    }
+    
     
     public void treinar(){
         double u=0;
@@ -69,11 +74,32 @@ public class Perceptron {
         }
     }
     
-    private void ajustar_pesos(boolean aumentar, int ordem){
+    public void ajustar_pesos(boolean aumentar, int ordem){
         if (aumentar){
             this.w[ordem]+=this.a;
         }else{
             this.w[ordem]-=this.a;
+        }
+    }
+    public int calcula(int valor_x,int valor_y , double[] peso){
+        double u=0;
+        int result = 0;
+         u=valor_x*peso[0] + valor_y*peso[1] + peso[2];                
+        //Calculando a saída
+        if (u>=0){
+            result = 1;
+            return 1;
+        }else{
+            result= 0;
+            return 0;
+        }
+                                    
+    }
+    public double ajustarPesos(boolean aumentar,  double valor){
+        if (aumentar){
+            return (valor+=this.a);
+        }else{
+            return valor-=this.a;
         }
     }
 }
