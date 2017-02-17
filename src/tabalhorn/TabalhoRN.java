@@ -16,30 +16,33 @@ public class TabalhoRN {
      */
     public static void main(String[] args) {
         int [][]x = {{0,0,1,1},{0,1,0,1}};        
-        double [][]w={{-0.5,0.5,-0.3},{-0.5,-0.2,0.75}};
-        int [][]d= {{0,1,0,0},{0,0,1,0}};
-        int[] ordem ={0,0};        
-        int result, result2;
-        boolean[] continua = {true, true};
-        boolean[] achou = {false, false};
+        double [][]w={{-0.5,0.5,-0.3},{-0.5,-0.2,0.75},{0.5,-0.2,-0.75}};
+        int [][]d= {{0,1,0,0},{0,0,1,0},{0,1,1,0}};
+        int[] ordem ={0,0,0};        
+        int result, result2, result3;
+        boolean[] continua = {true, true,true};
+        boolean[] achou = {false, false,false};
         boolean fim = true;
         Perceptron p1= new Perceptron(0.05);
         Perceptron p2=new Perceptron(0.07);
+        Perceptron p3=new Perceptron(0.07);
         for (int j = 0; (j < 1000) && ( fim ); j++) {
             continua[0] = false;
             continua[1] = false;
+            continua[2] = false;
             fim = false;
             for (int i = 0; i < x[0].length; i++) {
                 result = p1.calcula(x[0][i], x[1][i], w[0]);
                 result2 = p2.calcula(x[0][i], x[1][i], w[1]);
-                /*
-                System.out.println("(" + x[0][i] + 
-                            "  ," + x[1][i] + 
-                            ")  ="+result2  +
-                            "  w1="+ w[1][0] +
-                             "  w2=" + w[1][1] +
-                              "  w0=" + w[1][2]);
-                */
+                result3 = p3.calcula(result, result2, w[2]);
+                
+                System.out.println("Epoca: "+j+" (" +result + 
+                            "  ," + result2 + 
+                            ")  ="+result3  +
+                            "  w1="+ w[2][0] +
+                             "  w2=" + w[2][1] +
+                              "  w0=" + w[2][2]);
+                
                
                 //ajustar pesos p1
                if(achou[0]==false){
@@ -68,6 +71,20 @@ public class TabalhoRN {
                     }
                     if (ordem[1]>=w[1].length){
                         ordem[1]=0;
+                    }
+               }
+               if(achou[2]==false){
+                    if((result3==1) && (d[2][i]==0)){
+                        w[2][ordem[2]]=p2.ajustarPesos(false,w[2][ordem[2]]); //Deve diminuir os pesos
+                        ordem[2]++;
+                        continua[2] = true;
+                    }else if ((result3==0)&&(d[2][i]==1)){
+                        w[2][ordem[2]]=p2.ajustarPesos(true,w[2][ordem[2]]); //Deve aumentar os pesos
+                        ordem[2]++;                
+                        continua[2] = true;
+                    }
+                    if (ordem[2]>=w[2].length){
+                        ordem[2]=0;
                     }
                }
             }
